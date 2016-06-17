@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <!--引入bootstrap框架-->
+      <link rel="stylesheet" href="stylesheets/bootstrap.min.css"/>
+      <style>
+          .container{margin-top: 20px}
+          .submit{text-align: center}
+      </style>
+  </head>
+  <body>
+    <!--前端的实现-->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <h1>数据库作业，增删查改</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <!--添加method属性，method=post-->
+                <form class="form-horizontal" role="form" method="post">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-2 control-label">名字</label>
+
+                        <div class="col-sm-8">
+                            <!--name属性name="name"-->
+                            <!--name 属性用于指定锚（anchor）的名称-->
+                            <input type="text" class="form-control" id="name" name="name"
+                                   placeholder="名字">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sex" class="col-sm-2 control-label">性别</label>
+
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="sex" name="sex"
+                                   placeholder="性别">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="QQ" class="col-sm-2 control-label">QQ</label>
+
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="QQ" name="QQ"
+                                   placeholder="QQ">
+                        </div>
+                    </div>
+                    <div class="form-group submit">
+                        <button type="submit" class="btn btn-info btn-lg">插入</button>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <table class="table table-striped">
+                    <caption>数据库信息</caption>
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>QQ</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--将数据库中所有数据动态展示出来-->
+                    <%
+                    if(users)
+                    users.forEach(function(users){ %>
+                    <!--绑定事件用-->
+                    <tr class="item">
+                        <!--item的四个孩子-->
+                        <!--拉取数据库中的数据-->
+                        <td><%=users.user_id%></td>
+                        <td><%=users.user_name%></td>
+                        <td><%=users.user_sex%></td>
+                        <td><%=users.user_qq%></td>
+                        <td>
+                            <button class="btn btn-primary revise" data-toggle="modal"
+                                    data-target="#revise">修改
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary del" data-toggle="modal"
+                                    data-target="#del">删除
+                            </button>
+                        </td>
+                    </tr>
+                    <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--添加修改和删除的模态框-->
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="revise" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        修改用户信息
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form" method="post">
+                        <div class="form-group">
+                            <label for="id" class="col-sm-2 control-label">ID</label>
+
+                            <div class="col-sm-8">
+                                <!--input添加属性disabled禁止访问，阻止用户对其的修改-->
+                                <input disabled type="text" class="form-control " id="id" name="id"
+                                       placeholder="ID">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="rname" class="col-sm-2 control-label">名字</label>
+
+                            <div class="col-sm-8">
+                                <!--id=rname绑定修改事件-->
+                                <input type="text" class="form-control" id="rname" name="rname"
+                                       placeholder="名字">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="rsex" class="col-sm-2 control-label">性别</label>
+
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="rsex" name="rsex"
+                                       placeholder="性别">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="rQQ" class="col-sm-2 control-label">QQ</label>
+
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="rQQ" name="rQQ"
+                                       placeholder="QQ">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">关闭
+                    </button>
+                    <button type="submit" onclick="edit()" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--点击【删除按钮】时弹出的模态框 -->
+    <div class="modal fade" id="del" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">用户删除</h4>
+                </div>
+                <div class="modal-body delete">
+                    <h1></h1>
+                    <input style="display: none" readOnly="true" type="text" id="delname" name="delname" class="form-control"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消删除</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="del()">确定删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.js"></script>
+    <script type="text/javascript" src="javascripts/bootstrap.min.js"></script>
+  <!--实现修改和删除的js-->
+    <!--绑定事件-->
+    <script>
+        var uuu =[];//定义全局变量，存储数据；
+        var change = [];
+        $(function(){
+            //寻找item；
+            $('.item').each(function(){
+                /*
+                *寻找修改按钮
+                * this代指item
+                 */
+                var tmp = $(this).children().eq(4);
+                var btn = tmp.children();//得到具体的值；
+                btn.bind("click", function () {
+                    var id = btn.parent().parent().children("td").get(0).innerText;
+                    var name = btn.parent().parent().children("td").get(1).innerText;
+                    var sex = btn.parent().parent().children("td").get(2).innerText;
+                    var QQ = btn.parent().parent().children("td").get(3).innerText;
+                    uuu = [id,name,sex,QQ];
+                    //绑定修改的表单，显示出修改之前的信息；
+                    $('#id').val(id)//已经显出出来id
+                    $('#rname').val(name);//让模态狂显示刚才回去的name信息；
+                    $('#rsex').val(sex);
+                    $('#rQQ').val(QQ);
+                });
+                //删除按钮是第六个；
+                var  del = $(this).children().eq(5);
+                var  del_btn = del.children();
+                del_btn.bind("click",function(){
+                    var id = btn.parent().parent().children("td").get(0).innerText;
+                    var name = btn.parent().parent().children("td").get(1).innerText;//显示在模态框中；
+                    $('#delname').val(id);//将用户id返回后台，用于查找数据库中user_id=id的用户，用于删除；
+                    $('.delete>h1').html("确定删除用户<strong>"+name+"</strong>吗？");//将用户的名字反映到前端页面，用于提示；
+                });
+            });
+        });
+        /*
+        修改信息；
+         */
+        function edit(){
+            var editId = $("input[name='id']").val();//获取input表单中用户修改的数据，存入editId；
+            var editName = $("input[name='rname']").val();//获取input表单中用户修改的数据，存入editId；
+            var editSex = $("input[name='rsex']").val();//获取input表单中用户修改的数据，存入editId；
+            var editQQ = $("input[name='rQQ']").val();//获取input表单中用户修改的数据，存入editId；
+            change = [editId,editName,editSex,editQQ];  //将修改的数据存入change数组；
+            var obj = JSON.stringify(change);
+            $.ajax({
+                type: "post",
+                url: "/user/edit",
+                data: {obj: obj},
+                success: function seccess() {
+                    //alert("信息修改成功");
+                    location.reload()
+                }
+            })
+        }
+        function del(){
+            var delname =$("input[name='delname']").val();
+            var obj = JSON.stringify(delname);
+            console.log(obj);
+            $.ajax({
+                type: "post",
+                url: "/user/del",
+                data: {obj: obj},
+                success: function seccess() {
+                   // alert("删除成功！");
+                    location.reload()
+                }
+            });
+        }
+    </script>
+
+  </body>
+</html>
